@@ -1,4 +1,4 @@
-# "*__name__*"
+# *__name__*
 
 ## Project setup
 ```
