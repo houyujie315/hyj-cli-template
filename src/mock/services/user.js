@@ -31,6 +31,26 @@ const info = (options) => {
     'deleted': 0,
     'permissions': [{
       'roleId': 'admin',
+      'permissionId': 'goods',
+      'permissionName': '商品'
+      },
+      {
+        'roleId': 'admin',
+        'permissionId': 'content',
+        'permissionName': '内容'
+      },
+      {
+        'roleId': 'admin',
+        'permissionId': 'adverts',
+        'permissionName': '广告'
+      },
+      {
+        'roleId': 'admin',
+        'permissionId': 'manager',
+        'permissionName': '系统设置'
+      },
+      {
+      'roleId': 'admin',
       'permissionId': 'dashboard',
       'permissionName': '仪表盘',
       'actions': '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"query","defaultCheck":false,"describe":"查询"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"}]',
@@ -372,6 +392,19 @@ const info = (options) => {
 
 const userNav = (options) => {
   const nav = [
+    // goods
+    // {
+    //   'name': 'goods',
+    //   'parentId': 10040,
+    //   'id': 10040,
+    //   'meta': {
+    //     'icon': 'goods',
+    //     'title': '商品',
+    //     'show': true
+    //   },
+    //   'component': 'RouteView',
+    //   'redirect': '/goods/list'
+    // },
     // dashboard
     {
       'name': 'dashboard',

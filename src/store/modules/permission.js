@@ -29,15 +29,16 @@ function hasPermission (permission, route) {
  * @returns {*}
  */
 // eslint-disable-next-line
-function hasRole(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return route.meta.roles.includes(roles.id)
-  } else {
-    return true
-  }
-}
+// function hasRole(roles, route) {
+//   if (route.meta && route.meta.roles) {
+//     return route.meta.roles.includes(roles.id)
+//   } else {
+//     return true
+//   }
+// }
 
 function filterAsyncRouter (routerMap, roles) {
+  console.log(routerMap, 'routerMap')
   const accessedRouters = routerMap.filter(route => {
     if (hasPermission(roles.permissionList, route)) {
       if (route.children && route.children.length) {

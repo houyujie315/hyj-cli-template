@@ -21,7 +21,9 @@ import './core/use' // 统一引入文件
 import './router/permission' // permission control
 import './utils/filter' // global filter
 import './global.less' // global style
-
+import './assets/css/common.css'
+import './assets/css/base.css'
+import './assets/css/reset.css'
 Vue.config.productionTip = false
 
 // mount axios to `Vue.$http` and `this.$http`

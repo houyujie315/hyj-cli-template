@@ -15,7 +15,8 @@ const constantRouterComponents = {
   '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
 
   // 你需要动态引入的页面组件
-  'Workplace': () => import('@/views/dashboard/Workplace'),
+  // 'Workplace': () => import('@/views/dashboard/Workplace'),
+  Workplace: () => import('@/views/dashboard/Workplace'),
   'Analysis': () => import('@/views/dashboard/Analysis'),
 
   // form
@@ -43,31 +44,44 @@ const constantRouterComponents = {
   'Exception404': () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
   'Exception500': () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
 
-  // account
-  'AccountCenter': () => import('@/views/account/center'),
-  'AccountSettings': () => import('@/views/account/settings/Index'),
-  // 'BaseSettings': () => import('@/views/account/settings/BaseSetting'),
-  'SecuritySettings': () => import('@/views/account/settings/Security'),
-  'CustomSettings': () => import('@/views/account/settings/Custom'),
-  'BindingSettings': () => import('@/views/account/settings/Binding'),
-  'NotificationSettings': () => import('@/views/account/settings/Notification'),
-
   'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork'),
 
   // other
   'IconSelectorView': () => import('@/views/other/IconSelectorView'),
   'TreeList': () => import('@/views/other/TreeList'),
   'TableInnerEditList': () => import('@/views/other/TableInnerEditList'),
-  'UserList': () => import('@/views/other/UserList'),
-  'RoleList': () => import('@/views/other/RoleList'),
+  // 'UserList': () => import('@/views/other/UserList'),
+  // 'RoleList': () => import('@/views/other/RoleList'),
   'SystemRole': () => import('@/views/role/RoleList'),
-  'PermissionList': () => import('@/views/other/PermissionList')
+  'PermissionList': () => import('@/views/other/PermissionList'),
 
+  // new
+  // 'GoodsList': () => import('@/views/goods/list'),
+  // 'GoodsAdd': () => import('@/views/goods/add'),
+
+  // account
+  AccountSettings: () => import('@/views/account/settings/Index'),
+  BaseSettings: () => import('@/views/account/settings/BaseSetting'),
+  SecuritySettings: () => import('@/views/account/settings/Security'),
+  CustomSettings: () => import('@/views/account/settings/Custom'),
+
+  // manager
+  PermitList: () => import('@/views/manager/PermitList'),
+  RoleList: () => import('@/views/manager/RoleList'),
+  UserList: () => import('@/views/manager/UserList'),
+  MenuList: () => import('@/views/manager/MenuList'),
+  ActionList: () => import('@/views/manager/ActionList'),
+
+  // order
+  OrderList: () => import('@/views/order/OrderList'),
+  OrderDetail: () => import('@/views/order/OrderDetail')
 }
 
 // 前端未找到页面路由（固定不用改）
 const notFoundRouter = {
-  path: '*', redirect: '/404', hidden: true
+  path: '*',
+  redirect: '/404',
+  hidden: true
 }
 
 // 根级菜单
@@ -91,12 +105,11 @@ const rootRouter = {
 export const generatorDynamicRouter = (token) => {
   return new Promise((resolve, reject) => {
     loginService.getCurrentUserNav(token).then(res => {
-      console.log('res', res)
-      const { result } = res
+      const { response } = res
       const menuNav = []
       const childrenNav = []
       //      后端数据, 根级树数组,  根级 PID
-      listToTree(result, childrenNav, 0)
+      listToTree(response, childrenNav, 0)
       rootRouter.children = childrenNav
       menuNav.push(rootRouter)
       console.log('menuNav', menuNav)
@@ -169,16 +182,17 @@ export const generator = (routerMap, parent) => {
  * @param parentId 父ID
  */
 const listToTree = (list, tree, parentId) => {
+  console.log(list, 'list')
   list.forEach(item => {
     // 判断是否为父级菜单
     if (item.parentId === parentId) {
       const child = {
         ...item,
-        key: item.key || item.name,
+        key: item.key || item.permission,
         children: []
       }
       // 迭代 list， 找到当前菜单相符合的所有子菜单
-      listToTree(list, child.children, item.id)
+      listToTree(list, child.children, item.menu_id)
       // 删掉不存在 children 值的属性
       if (child.children.length <= 0) {
         delete child.children

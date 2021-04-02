@@ -35,5 +35,21 @@ export default {
     'menu.account.center': '个人中心',
     'menu.account.settings': '个人设置',
     'menu.account.trigger': '触发报错',
-    'menu.account.logout': '退出登录'
+    'menu.account.logout': '退出登录',
+    'menu.goods': '商品',
+    'menu.goods.list': '商品管理',
+    'menu.goods.classify': '分类管理',
+    'menu.goods.comment': '评论管理',
+    'menu.content': '内容',
+    'menu.content.articles': '文章管理',
+    'menu.content.classify': '文章分类',
+    'menu.adverts': '广告',
+    'menu.adverts.list': '广告管理',
+    'menu.adverts.position': '广告位管理',
+    'menu.manager': '系统管理',
+    'menu.manager.menu': '系统菜单',
+    'menu.manager.permit': '权限列表',
+    'menu.manager.role': '角色列表',
+    'menu.manager.usermgr': '用户管理',
+    'menu.manager.action': '操作管理'
 }

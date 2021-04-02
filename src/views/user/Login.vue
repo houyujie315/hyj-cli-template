@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import md5 from 'md5'
+// import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
@@ -189,9 +189,23 @@ export default {
           const loginParams = { ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          loginParams.password = md5(values.password)
-          Login(loginParams)
-            .then((res) => this.loginSuccess(res))
+          // loginParams.password = md5(values.password)
+          loginParams.password = values.password
+          Login({
+            account: loginParams.username,
+            pass_word: loginParams.password
+          })
+            .then((res) => {
+              if (res.code === 200) {
+                this.loginSuccess(res)
+              } else {
+                this.$notification['error']({
+                  message: '错误',
+                  description: res.msg,
+                  duration: 4
+                })
+              }
+            })
             .catch(err => this.requestFailed(err))
             .finally(() => {
               state.loginBtn = false

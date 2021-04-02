@@ -1,32 +1,44 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/auth/login',
+  Login: '/api/admin/v1/Admins/login',
   Logout: '/auth/logout',
+  RestPassword: '/api/admin/v1/Admins/rest/password',
   ForgePassword: '/auth/forge-password',
   Register: '/auth/register',
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
   // get my info
-  UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+  UserInfo: '/api/admin/v1/Admins/info',
+  UserMenu: '/api/admin/v1/Menus/navmenu'
+  // UserInfo: '/api/user/info',
+  // UserMenu: '/api/user/nav'
 }
 
 /**
- * login func
- * parameter: {
- *     username: '',
- *     password: '',
- *     remember_me: true,
- *     captcha: '12345'
- * }
+ * login func 登录
+ * parameter: {}
  * @param parameter
  * @returns {*}
  */
 export function login (parameter) {
   return request({
     url: userApi.Login,
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 修改登录密码
+ * parameter: {}
+ * @param parameter
+ * @returns {*}
+ */
+ export function restPassword (parameter) {
+  return request({
+    url: userApi.RestPassword,
     method: 'post',
     data: parameter
   })

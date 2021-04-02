@@ -19,13 +19,22 @@ import NumberInfo from '@/components/NumberInfo'
 import Tree from '@/components/Tree/Tree'
 import Trend from '@/components/Trend'
 import STable from '@/components/Table'
+import STableNew from '@/components/TableNew'
 import MultiTab from '@/components/MultiTab'
 import IconSelector from '@/components/IconSelector'
 import TagSelect from '@/components/TagSelect'
 import StandardFormRow from '@/components/StandardFormRow'
 import ArticleListContent from '@/components/ArticleListContent'
+import Result from '@/components/Result'
 
 import Dialog from '@/components/Dialog'
+
+// editor
+import QuillEditor from '@/components/Editor/QuillEditor'
+import WangEditor from '@/components/Editor/WangEditor'
+
+// upload
+import SUpload from '@/components/Upload'
 
 export {
   AvatarList,
@@ -46,11 +55,15 @@ export {
   NumberInfo,
   Tree,
   STable,
+  STableNew,
   MultiTab,
   IconSelector,
   TagSelect,
   StandardFormRow,
   ArticleListContent,
-
-  Dialog
+  Dialog,
+  QuillEditor,
+  WangEditor,
+  SUpload,
+  Result
 }
