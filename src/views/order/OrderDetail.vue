@@ -69,8 +69,6 @@
                 <div class="flex m-t">
                   <div class="m-l">
                     <a-button type="info" size="small" @click="closeOrder()">取消订单</a-button>
-                    <!-- TODO -->
-                    <a-button type="info" size="small" style="margin-top: 4px" @click="orderShipModal()">发货</a-button>
                   </div>
                 </div>
               </div>
@@ -88,7 +86,7 @@
                 <div class="text-xs text-grey600 m-l-lg">买家已付款，请尽快发货，否则买家有权申请退款</div>
 
                 <div class="m-l-lg m-t flex">
-                  <a-button type="info" size="small" style="margin-top: 4px" @click="orderShipModal()">发货</a-button>
+                  <a-button type="info" size="small" style="margin-top: 4px" @click="$refs.deliverModel.show(detailData.order_id)">发货</a-button>
                 </div>
               </div>
             </template>
@@ -316,7 +314,7 @@
             <div class="padder-r">
               <div>
                 <span class="order-summary-title">商品总价</span>
-                <span>￥{{ parseFloat(detailData.goods_total_money).toFixed(2) }}{{ detailData.order_total_integral>0?'+ '+detailData.order_total_integral+'金豆':'' }}</span>
+                <span>￥{{ parseFloat(detailData.goods_total_money).toFixed(2) }}</span>
               </div>
               <div>
                 <span class="order-summary-title">运费</span>
@@ -336,15 +334,18 @@
       </a-card>
     </div>
     <deliver-model ref="deliverModel" :orderDetali="detailData" @ok="handleOk"></deliver-model>
+    <dogistic-model ref="dogisticModel" :orderDetali="detailData"></dogistic-model>
   </page-header-wrapper>
 </template>
 <script>
 import { getOrderDetail, apiOrderCancel } from '@/api/order'
 import DeliverModel from './modules/DeliverModel'
+import DogisticModel from './modules/DogisticModel'
 export default {
   name: 'OrderDetail',
   components: {
-    DeliverModel
+    DeliverModel,
+    DogisticModel
   },
   data () {
     return {
@@ -399,8 +400,8 @@ export default {
           })
         })
     },
+    // 获取物流轨迹
     logisticTrack (logistics) {
-      console.log(logistics)
     },
     // 取消订单
     closeOrder () {
@@ -432,7 +433,9 @@ export default {
     orderShipModal () {
       this.$refs.deliverModel.show()
     },
-    handleOk () {}
+    handleOk () {
+      this.orderDetail()
+    }
   }
 }
 </script>

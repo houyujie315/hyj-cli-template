@@ -43,7 +43,7 @@
     </s-table-new>
 
     <user-editor ref="userEditor" @ok="handleOk"></user-editor>
-    <user-pwd ref="userPwd" @ok="handleOk"></user-pwd>
+    <!-- <user-pwd ref="userPwd" @ok="handleOk"></user-pwd> -->
   </a-card>
 </template>
 

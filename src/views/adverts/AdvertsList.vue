@@ -15,7 +15,6 @@
                 <a-select-option :value="-1">全部</a-select-option>
                 <a-select-option :value="1">文本</a-select-option>
                 <a-select-option :value="2">图片</a-select-option>
-                <!-- <a-select-option :value="3">视频</a-select-option> -->
               </a-select>
             </a-form-item>
           </a-col>
@@ -37,12 +36,12 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="开始时间">
-              <a-date-picker v-decorator="['start_time']" style="width: 100%" placeholder="请选择日期"/>
+              <a-date-picker v-decorator="['start_time']" format="YYYY-MM-DD HH:mm:ss" style="width: 100%" placeholder="请选择日期"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="结束时间">
-              <a-date-picker v-decorator="['end_time']" style="width: 100%" placeholder="请选择日期"/>
+              <a-date-picker v-decorator="['end_time']" format="YYYY-MM-DD HH:mm:ss" style="width: 100%" placeholder="请选择日期"/>
             </a-form-item>
           </a-col>
         </a-row>

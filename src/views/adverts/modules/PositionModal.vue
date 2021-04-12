@@ -10,11 +10,13 @@
           <p class="describe-text">广告位标识，只允许字母、数字、下划线</p>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="封面">
+          <a-input v-decorator="['cover',{ initialValue: mdlData.cover } ]" hidden/>
           <s-upload
             :isShowList="true"
             @uploadListDataRes="(value) => SkuPicSuccess(value)"
-            :uploadListData="[{ url: mdlData.cover }]"
+            :uploadListData="[{ url: imgUrl }]"
             :limitNum="1"
+            v-if="visible"
           ></s-upload>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="广告位尺寸">
@@ -57,7 +59,6 @@
 <script>
 import { apiAdvertsPosition, getAdvertsPositionDetail } from '@/api/adverts'
 import { SUpload } from '@/components'
-
 export default {
   name: 'PositionModal',
   components: {
@@ -91,15 +92,15 @@ export default {
       previewVisible: false,
       previewImage: '',
       editType: 0, // 0添加 1编辑
-      editId: null
+      editId: null,
+      imgUrl: ''
     }
   },
   async created () {
   },
   methods: {
-    set (data) {
+    async set (data) {
       const self = this
-      self.visible = true
       self.editType = data.editType
       switch (self.editType) {
         case 0:
@@ -117,21 +118,24 @@ export default {
           break
         case 1:
           self.editId = data.id
-          getAdvertsPositionDetail({
+           await getAdvertsPositionDetail({
             id: data.id
           }).then(res => {
             console.log(data)
             if (res.code === 200) {
               self.mdlData = res.response
+              self.imgUrl = res.response.cover
             }
           })
           break
         default:
           break
       }
+      self.visible = true
     },
     handleCancel () {
       this.visible = false
+      this.imgUrl = ''
       this.form.resetFields()
     },
     // 提交

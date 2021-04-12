@@ -31,7 +31,7 @@
 <script>
 import md5 from 'md5'
 import pick from 'lodash.pick'
-import { apiManager } from '@/api/manager'
+import { apiUsers } from '@/api/manager'
 
 export default {
   name: 'UserPwd',
@@ -69,7 +69,7 @@ export default {
           values.loginame = self.mdlData.loginame
           values.status = self.mdlData.status
           values.roleid = self.mdlData.roleid
-          apiManager(`user/${cmd}`, values).then(res => {
+          apiUsers(`user/${cmd}`, values).then(res => {
             if (res.code === 0) {
               self.visible = false
               self.confirmLoading = false

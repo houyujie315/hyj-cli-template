@@ -10,7 +10,7 @@ import i18n from './locales'
 import { VueAxios } from './utils/request'
 import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
-
+import draggable from 'vuedraggable'
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 import './mock'
@@ -24,14 +24,16 @@ import './global.less' // global style
 import './assets/css/common.css'
 import './assets/css/base.css'
 import './assets/css/reset.css'
-Vue.config.productionTip = false
-
+import util from './assets/js/utils.js'
+Vue.config.productionTip = false // 公共方法
+Vue.use(util)
 // mount axios to `Vue.$http` and `this.$http`
 Vue.use(VueAxios)
 // use pro-layout components
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
+Vue.component('draggable', draggable)
 
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 

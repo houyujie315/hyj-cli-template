@@ -18,8 +18,9 @@
           <s-upload
             :isShowList="true"
             @uploadListDataRes="(value) => SkuPicSuccess(value)"
-            :uploadListData="[{ url: mdlData.cover }]"
+            :uploadListData="[{ url: mdlData.img_url }]"
             :limitNum="1"
+            v-if="visible"
           ></s-upload>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
@@ -109,7 +110,7 @@ export default {
       }
       return list
     },
-    set (data) {
+    async set (data) {
       const self = this
       self.editType = data.editType
       switch (self.editType) {
@@ -127,7 +128,7 @@ export default {
           break
         case 1:
           self.editId = data.id
-          getArticlesCategoryDetail({
+          await getArticlesCategoryDetail({
             id: data.id
           }).then(res => {
             if (res.code === 200) {

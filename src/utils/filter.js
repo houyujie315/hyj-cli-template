@@ -70,8 +70,9 @@ Vue.filter('setImgUrl', function (imgUrl, type, size) {
     imgUrl = 'http://img.jishuibao.net/b6847a322981490b80cce76a28f8a431'
   } else if (type === 'shop') {
     imgUrl = 'http://img.jishuibao.net/9977db1be5744ab285d332c3ec1a5614'
-  } else {
-    imgUrl = 'http://img.jishuibao.net/72fda1f371874bc8854f923ed0c102a9'
   }
+  // else {
+  //   imgUrl = 'http://img.jishuibao.net/72fda1f371874bc8854f923ed0c102a9'
+  // }
   return imgUrl
 })

@@ -10,7 +10,7 @@
         <template>
           <img
             style="object-fit:cover"
-            :src="item.url | setImgUrl('',300 )"
+            :src="item.url | setImgUrl('', 300)"
             @load="handleImgLoad($event, item)"
           />
           <div class="demo-upload-list-cover" :style="uploadStyle">
@@ -28,7 +28,7 @@
       list-type="picture-card"
       :show-upload-list="false"
       :before-upload="handleBeforeUpload"
-      :multiple="true"
+      :multiple="isMultiple"
       :data="{token:getImageData.token}"
       :action="action"
       :style="uploadStyle"
@@ -109,7 +109,6 @@ export default {
   },
   computed: {
     canUploadNum () {
-      console.log(this.limitNum - this.showImgList.length)
       return this.limitNum - this.showImgList.length
     },
     isMultiple () {
@@ -144,7 +143,8 @@ export default {
     },
     uploadListData: {
       handler (value) {
-        console.log(value, 'handlervalue')
+        console.log(value, 'value')
+        // TODO
         if (value.some((v) => v.hasOwnProperty('check_code'))) {
           this.showImgList = value
         }
@@ -158,10 +158,7 @@ export default {
     } else {
       this.action = 'http://up-z2.qiniup.com'
     }
-    const newList = this.uploadListData.filter((item) => {
-      return item.url !== undefined || ''
-    })
-    this.showImgList = this.handleCurrentList(newList)
+    this.showImgList = this.handleCurrentList(this.uploadListData)
     // 有空链接
     const res = this.uploadListData.some((v) => v.url === '')
     if (res) {
@@ -220,9 +217,9 @@ export default {
                   isSelected: false,
                   selectedIndex: 1,
                   thumbnail_300: file.url,
-                  check_code: '',
                   showProgress: false,
                   status: 'myuploading',
+                  check_code: '',
                   lastModified: file.lastModified
                 }
                 this.uploadList.push(obj)

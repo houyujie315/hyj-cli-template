@@ -104,7 +104,7 @@ export default {
   methods: {
     addArticle () {
       this.$router.push({
-        name: 'AddArticles'
+        path: '/content/articles/add'
       })
     },
     filter () {
@@ -117,7 +117,7 @@ export default {
     // 编辑文章
     editContent (item) {
       this.$router.push({
-        name: 'AddArticles',
+        path: '/content/articles/add',
         query: {
           id: item.id
         }

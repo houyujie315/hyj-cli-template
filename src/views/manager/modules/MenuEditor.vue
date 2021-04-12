@@ -251,7 +251,7 @@ export default {
             } else {
               self.$notification.error({
                 message: '错误',
-                description: res.info,
+                description: res.msg,
                 duration: 4
               })
               this.confirmLoading = false

@@ -18,20 +18,13 @@
           <p class="describe-text">请填写完整链接地址，如：http://www.baidu.com</p>
         </a-form-item>
         <a-form-item label="文章封面" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <div class="cover-image-add">
-            <a-upload
-              ref="uploader"
-              :action="uploadUrl"
-              :beforeUpload="beforeUpload"
-              :data="qiniuData"
-              @change="handleChange"
-            >
-              <img v-if="articleVerify.img_url" :src="articleVerify.img_url" />
-              <div v-else class="cover-image-null">
-                <a-icon type="plus" />
-              </div>
-            </a-upload>
-          </div>
+          <a-input v-decorator="['img_url',{ initialValue: articleVerify.img_url } ]" hidden/>
+          <s-upload
+            :isShowList="true"
+            @uploadListDataRes="(value) => SkuPicSuccess(value)"
+            :uploadListData="[{ url: imgUrl }]"
+            :limitNum="1"
+          ></s-upload>
         </a-form-item>
         <a-form-item label="文章分类" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-row>
@@ -43,7 +36,7 @@
             <a-col :span="8" style="margin-left: 10px">
               <a @click="obtainArticleCategory()">刷新</a>
               <router-link
-                :to="{ name:'ContentClassify' }"
+                :to="{ path:'/content/classify' }"
                 target="_blank"
                 style="padding-left: 5px; margin-left: 5px; border-left: 1px solid #3a3f51;"
               >创建文章分类</router-link>
@@ -60,25 +53,33 @@
             </a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="是否可评论" :labelCol="labelCol" :wrapperCol="{ span:12 }">
-          <a-switch v-decorator="['is_msg', { initialValue: articleVerify.is_msg, valuePropName: 'checked' }]" />
-          <span style="margin-left: 15px">
-            是否置顶：
-            <a-switch v-decorator="['is_top', { initialValue: articleVerify.is_top, valuePropName: 'checked' }]" />
-          </span>
-          <span style="margin-left: 15px">
-            是否推荐：
-            <a-switch v-decorator="['is_red', { initialValue: articleVerify.is_red, valuePropName: 'checked' }]" />
-          </span>
-          <span style="margin-left: 15px">
-            是否热门：
-            <a-switch v-decorator="['is_host', { initialValue: articleVerify.is_host, valuePropName: 'checked' }]" />
-          </span>
-          <span style="margin-left: 15px">
-            是否是系统文章：
-            <a-switch v-decorator="['is_sys', { initialValue: articleVerify.is_sys, valuePropName: 'checked' }]" />
-          </span>
-        </a-form-item>
+        <a-row style="margin-left:45px;">
+          <a-col :span="2">
+            <a-form-item label="是否可评论" :labelCol="{span:16}" :wrapperCol="{ span:1 }">
+              <a-switch v-decorator="['is_msg', { initialValue: articleVerify.is_msg, valuePropName: 'checked' }]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="2">
+            <a-form-item label="是否置顶" :labelCol="{span:16}" :wrapperCol="{ span:1 }">
+              <a-switch v-decorator="['is_top', { initialValue: articleVerify.is_top, valuePropName: 'checked' }]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="2">
+            <a-form-item label="是否推荐" :labelCol="{span:16}" :wrapperCol="{ span:1 }">
+              <a-switch v-decorator="['is_red', { initialValue: articleVerify.is_red, valuePropName: 'checked' }]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="2">
+            <a-form-item label="是否热门" :labelCol="{span:16}" :wrapperCol="{ span:1 }">
+              <a-switch v-decorator="['is_host', { initialValue: articleVerify.is_host, valuePropName: 'checked' }]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="3">
+            <a-form-item label="是否是系统文章" :labelCol="{span:16}" :wrapperCol="{ span:1 }">
+              <a-switch v-decorator="['is_sys', { initialValue: articleVerify.is_sys, valuePropName: 'checked' }]" />
+            </a-form-item>
+          </a-col>
+        </a-row>
         <a-form-item label="文章摘要" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea
             :maxLength="300"
@@ -101,11 +102,12 @@
 </template>
 <script>
 import { getArticlesCategoryList, getArticlesDetail, apiArticles } from '@/api/content'
-import { QuillEditor } from '@/components'
+import { QuillEditor, SUpload } from '@/components'
 export default {
   name: 'AddArticles',
   components: {
-    QuillEditor
+    QuillEditor,
+    SUpload
   },
   data () {
     return {
@@ -115,6 +117,7 @@ export default {
       wrapperCol: {
         span: 10
       },
+      imgUrl: '',
       form: this.$form.createForm(this),
       articleVerify: {
         channel_id: -1,
@@ -173,8 +176,9 @@ export default {
             .then(res => {
               if (res.code === 200) {
                 self.$message.success('操作成功')
+                self.$form.resetFields()
                 self.$router.push({
-                  name: 'ArticlesList'
+                  path: '/content/articles'
                 })
               } else {
                 self.$message.error(res.msg)
@@ -192,7 +196,7 @@ export default {
     handleCancel () {
       this.form.resetFields()
       this.$router.push({
-        name: 'ArticlesList'
+        path: '/content/articles'
       })
     },
     geDetail (id) {
@@ -201,10 +205,17 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             self.articleVerify = res.response
+            self.imgUrl = res.response.img_url
           } else {
             self.$message.error(res.msg)
           }
         })
+    },
+    SkuPicSuccess (value) {
+      this.form.setFieldsValue({
+        img_url: value.length > 0 ? value[0].url : ''
+      })
+      // this.articleVerify.img_url = value.length > 0 ? value[0].url : ''
     }
   }
 }

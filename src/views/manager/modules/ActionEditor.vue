@@ -105,6 +105,7 @@ export default {
             if (res.code === 200) {
               self.visible = false
               self.confirmLoading = false
+              self.form.resetFields()
               self.$notification.success({
                 message: '提示',
                 description: self.editType === 1 ? '编辑成功' : '添加成功'
@@ -116,16 +117,17 @@ export default {
                 description: res.info,
                 duration: 4
               })
-              this.confirmLoading = false
+              self.confirmLoading = false
             }
           })
         } else {
-          this.confirmLoading = false
+          self.confirmLoading = false
         }
       })
     },
     handleCancel () {
       this.visible = false
+      this.confirmLoading = false
     }
   }
 }

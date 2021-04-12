@@ -1,33 +1,34 @@
 <template>
   <div>
-    <a-form :form="form" layout="inline">
+    <a-form-model ref="form" layout="inline">
       <a-card :bordered="false">
         <a-space>
-          <a-form-item label="订单编号">
-            <a-input style="width: 200px" v-decorator="['order_no']" placeholder="请输入订单编号" />
-          </a-form-item>
-          <a-form-item label="下单时间">
+          <a-form-model-item label="订单编号">
+            <a-input style="width: 200px" v-model="params.order_no" placeholder="请输入订单编号" />
+          </a-form-model-item>
+          <a-form-model-item label="下单时间">
             <a-range-picker
-              v-decorator="['timelist']"
-              format="YYYY-MM-DD"
+              show-time
+              format="YYYY-MM-DD HH:mm:ss"
+              @change="onTimeChange"
             />
-          </a-form-item>
-          <a-form-item label="订单状态">
-            <a-select v-decorator="['status', { initialValue: '0' }]" style="width: 150px" >
+          </a-form-model-item>
+          <a-form-model-item label="订单状态">
+            <a-select v-model="params.state" style="width: 150px" >
               <a-select-option v-for="item in orderStatusArr" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
             </a-select>
-          </a-form-item>
-          <a-form-item>
+          </a-form-model-item>
+          <a-form-model-item>
             <a-button @click="filter" type="primary">筛选</a-button>
-          </a-form-item>
+          </a-form-model-item>
         </a-space>
       </a-card>
       <a-card :bordered="false" style="margin-top: 15px">
-        <a-form-item>
-          <a-tabs v-decorator="['status']" type="card" @change="handleTabsChange" size="small" :tabBarGutter="5">
+        <a-form-model-item>
+          <a-tabs v-model="params.state" type="card" @change="handleTabsChange" size="small" :tabBarGutter="5">
             <a-tab-pane v-for="item in orderStatusArr" :key="item.value" :tab="item.label"></a-tab-pane>
           </a-tabs>
-        </a-form-item>
+        </a-form-model-item>
         <s-table-new ref="table" :columns="columns" size="default" :data="loadData" rowKey="order_id">
           <span slot="goods" slot-scope="text, record">
             <div v-for="(item, index) in record.goods" :key="index">
@@ -60,7 +61,7 @@
             </div>
             <div v-if="record.admin_order_status==2" >
               <div>等待商家发货</div>
-              <a-button class="m-t-xs" size="small" @click="orderShipModal(item)">发货</a-button>
+              <a-button class="m-t-xs" size="small" @click="$refs.deliverModel.show(record.order_id)">发货</a-button>
             </div>
             <div v-if="record.admin_order_status==3" >
               <div>商家已发货</div>
@@ -85,26 +86,30 @@
           </span>
         </s-table-new>
       </a-card>
-    </a-form>
+    </a-form-model>
+    <deliver-model ref="deliverModel" @ok="handleOk"></deliver-model>
   </div>
 </template>
 <script>
 import moment from 'moment'
 import { STableNew } from '@/components'
+import DeliverModel from './modules/DeliverModel'
 import { getOrderList, apiOrderCancel } from '@/api/order'
 export default {
   components: {
-    STableNew
+    STableNew,
+    DeliverModel
   },
   data () {
     return {
       initStatusValue: '0',
-      queryParam: {
-        // state: 0, // 订单状态
-        // order_no: '', // 订单编号
-        // create_start_time: '', // 下单开始时间
-        // create_end_time: '' // 下单结束时间
-      }, // 查询参数
+      queryParam: {}, // 查询参数
+      params: {
+        state: '0', // 订单状态
+        order_no: '', // 订单编号
+        create_start_time: '', // 下单开始时间
+        create_end_time: '' // 下单结束时间
+      },
       orderStatusArr: [
         { value: '0', label: '全部' },
         { value: '1', label: '待付款' },
@@ -142,32 +147,40 @@ export default {
           scopedSlots: { customRender: 'action' }
         }
       ],
-      form: this.$form.createForm(this),
       loadData: parameter => {
         return getOrderList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log(res)
           return res.response
         })
-      }
+      },
+      detailData: {}
     }
   },
   methods: {
     moment,
+    onTimeChange (dates, dateStrings) {
+      this.params.create_start_time = dateStrings[0]
+      this.params.create_end_time = dateStrings[0]
+    },
     filter () {
       const self = this
-      const { form: { getFieldsValue } } = self
-      const params = getFieldsValue()
-      self.queryParam = Object.assign(self.queryParam, params)
+      self.queryParam = Object.assign(self.queryParam, self.params)
       self.$refs.table.refresh()
     },
     handleTabsChange (key) {
-      self.queryParam = Object.assign(self.queryParam)
+      console.log(1123)
+      const self = this
+      self.queryParam = Object.assign(self.queryParam, self.params)
       self.$refs.table.refresh()
-      alert(1)
     },
-    handleStatusChange () {},
     // 发货
-    orderShipModal (record) {},
+    orderShipModal (record) {
+      this.detailData = record
+      this.$refs.deliverModel.show()
+    },
+    handleOk () {
+      this.$refs.table.refresh()
+    },
     // 取消订单
     canCel (record) {
       const self = this

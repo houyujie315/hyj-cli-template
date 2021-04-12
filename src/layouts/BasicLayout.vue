@@ -40,7 +40,7 @@
     </template>
     <!-- custom footer / 自定义Footer -->
     <template v-slot:footerRender>
-      <global-footer />
+      <global-footer v-if="$route.path != '/goods/add'"/>
     </template>
     <router-view v-if="flag" />
   </pro-layout>

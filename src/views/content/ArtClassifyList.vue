@@ -10,7 +10,7 @@
       style="marginTop: 15px"
       :showPagination="false">
       <span slot="name" slot-scope="text, record">
-        <img class="table-img" :src="record.img_url" >
+        <img class="table-img" :src="record.picture | setImgUrl('goods', 1)" />
         <span>{{ record.name }}</span>
       </span>
       <span slot="action" slot-scope="text, record">
@@ -62,6 +62,7 @@ export default {
         .then(res => {
           if (res.code === 200) {
             self.data = res.response
+            console.log(self.data)
           } else {
             self.$message.error(res.msg)
           }
@@ -108,5 +109,8 @@ export default {
   width: 35px;
   height: 35px;
   margin-right: 5px;
+}
+/deep/.ant-table-thead > tr > th, /deep/ .ant-table-tbody > tr > td {
+  padding: 8px;
 }
 </style>

@@ -1,14 +1,19 @@
 <template>
-  <a-modal title="商品发货" :width="800" :visible="visible" :confirmLoading="confirmLoading" @cancel="handleCancel">
+  <a-modal
+    title="商品发货"
+    :width="800"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @cancel="handleCancel">
     <a-spin :spinning="confirmLoading">
-      <div>选择商品：待发货 {{ orderDetali.order_goods.length }}</div>
+      <div>选择商品：待发货</div>
       <a-table :pagination="false" :columns="columns" :data-source="orderDetali.order_goods" rowKey="order_goods_id">
       </a-table>
-      <div class="m-t">
+      <div class="m-t" v-if="orderDetali.receiver">
         收货地址：{{ orderDetali.receiver.province_name }}{{ orderDetali.receiver.city_name }}{{ orderDetali.receiver.county_name }}{{ orderDetali.receiver.address }}
       </div>
       <a-form :form="form">
-        <a-form-item :labelCol="{ span: 3 }" :wrapperCol="{ span: 16 }" label="快递单号：">
+        <a-form-item :labelCol="{ span: 3 }" :wrapperCol="{ span: 16 }" label="物流公司：">
           <a-row>
             <a-col :span="12">
               <a-select
@@ -20,14 +25,14 @@
                   }
                 ]"
               >
-                <a-select-option :value="0">显示</a-select-option>
+                <a-select-option v-for="item in AllLogistics" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
               </a-select>
             </a-col>
             <a-col :span="12">
               <span>
-                <a @click="allLogisticslist()" class="m-l-xs">刷新</a>
+                <a @click="allLogisticslist" class="m-l-xs">刷新</a>
                 <router-link
-                  :to="{name:'delivery-set'}"
+                  :to="{path:'/logistics/company'}"
                   target="_blank"
                   class="m-l-xs b-l b-dark"
                   style="padding-left: 10px;"
@@ -56,14 +61,9 @@
   </a-modal>
 </template>
 <script>
-import { apiOrderCancel } from '@/api/order'
+import { getOrderDetail, apiOrderCancel } from '@/api/order'
+import { getLogisticsDro } from '@/api/logistics'
 export default {
-  props: {
-    orderDetali: {
-      type: Object,
-      default: null
-    }
-  },
   data () {
     return {
       visible: false,
@@ -105,15 +105,29 @@ export default {
           title: '单价',
           dataIndex: 'price'
         }
-      ]
+      ],
+      AllLogistics: [],
+      orderDetali: {}
     }
   },
-  computed: {
-  },
   methods: {
-    show () {
+    async show (id) {
       const self = this
       self.visible = true
+      await self.getDetail()
+      self.allLogisticslist()
+    },
+    getDetail (id) {
+      const self = this
+      getOrderDetail({
+        order_id: id
+      }).then(res => {
+        if (res.code === 200) {
+         self.orderDetali = res.response
+        } else {
+          self.$message.error(res.msg)
+        }
+      })
     },
     handleSubmit () {
       const self = this
@@ -146,7 +160,16 @@ export default {
     handleCancel () {
       this.visible = false
     },
-    allLogisticslist () {}
+    // 获取物流公司
+    allLogisticslist () {
+      getLogisticsDro().then(res => {
+        if (res.code === 200) {
+          this.AllLogistics = res.response
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    }
   }
 }
 </script>

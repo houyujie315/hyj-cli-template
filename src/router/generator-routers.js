@@ -74,7 +74,33 @@ const constantRouterComponents = {
 
   // order
   OrderList: () => import('@/views/order/OrderList'),
-  OrderDetail: () => import('@/views/order/OrderDetail')
+  OrderDetail: () => import('@/views/order/OrderDetail'),
+
+  // logistics
+  CompanyList: () => import('@/views/logistics/CompanyList'),
+  FreightList: () => import('@/views/logistics/FreightList'),
+  RtaddressList: () => import('@/views/logistics/RtaddressList'),
+  AddFreight: () => import('@/views/logistics/AddFreight'),
+
+  // goods
+  GoodsList: () => import('@/views/goods/GoodsList'),
+  AddGoods: () => import('@/views/goods/AddGoods'),
+  ClassifyList: () => import('@/views/goods/ClassifyList'),
+  CommentList: () => import('@/views/goods/CommentList'),
+
+  // content
+  ArticlesList: () => import('@/views/content/ArticlesList'),
+  ArtClassifyList: () => import('@/views/content/ArtClassifyList'),
+  AddArticles: () => import('@/views/content/AddArticles'),
+
+  // adverts
+  AdvertsList: () => import('@/views/adverts/AdvertsList'),
+  AdvertsPosition: () => import('@/views/adverts/AdvertsPosition'),
+
+  // users
+  UsersList: () => import('@/views/users/UsersList'),
+  // system
+  SystemSet: () => import('@/views/system/SystemSet')
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -182,7 +208,6 @@ export const generator = (routerMap, parent) => {
  * @param parentId 父ID
  */
 const listToTree = (list, tree, parentId) => {
-  console.log(list, 'list')
   list.forEach(item => {
     // 判断是否为父级菜单
     if (item.parentId === parentId) {
